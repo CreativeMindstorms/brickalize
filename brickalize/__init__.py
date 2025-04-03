@@ -3,7 +3,7 @@
 Brickalize: Convert 3D models into LEGO-like brick structures.
 """
 
-__version__ = "1.0"  # Should match version in pyproject.toml
+__version__ = "1.0.0"  # Should match version in pyproject.toml
 
 # Import the main classes to make them available at the package level
 from .bricks import Brick, BrickSet

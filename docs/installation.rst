@@ -37,5 +37,6 @@ Installing ``brickalize`` using either method will automatically install the fol
 *   tqdm
 *   opencv-python
 *   scipy
+*   rtree
 
 Ensure you have a compatible Python version (>= 3.8) installed.

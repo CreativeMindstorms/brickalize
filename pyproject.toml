@@ -33,6 +33,7 @@ dependencies = [
     "tqdm",
     "opencv-python",
     "scipy",
+    "rtree",
 ]
 
 [project.urls]

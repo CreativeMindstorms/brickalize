@@ -228,6 +228,7 @@ The package relies on the following libraries:
 *   tqdm
 *   opencv-python
 *   scipy
+*   rtree
 
 These will be installed automatically when you install `brickalize` using pip.
 

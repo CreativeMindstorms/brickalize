@@ -1,0 +1,39 @@
+# pyproject.toml
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "brickalize"
+version = "1.0" # Should match __version__ in __init__.py
+authors = [
+    { name="Sten Nellen (Creative Mindstorms)", email="creativemindstorms1@gmail.com" },
+]
+description = "A package for converting 3D models to LEGO-like brick structures and visualizing them."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file="LICENSE" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+]
+keywords = [
+    "3D",
+    "LEGO",
+    "modeling",
+]
+
+dependencies = [
+    "numpy",
+    "open3d",
+    "trimesh",
+    "tqdm",
+    "opencv-python",
+    "scipy",
+]
+
+[project.urls]
+Homepage = "https://github.com/CreativeMindstorms/brickalize"

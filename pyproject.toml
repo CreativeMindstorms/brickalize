@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "brickalize"
-version = "1.0.1" # Should match __version__ in __init__.py
+version = "1.0.2" # Should match __version__ in __init__.py
 authors = [
     { name="Sten Nellen (Creative Mindstorms)", email="creativemindstorms1@gmail.com" },
 ]

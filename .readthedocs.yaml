@@ -1,0 +1,28 @@
+# .readthedocs.yaml
+# Read the Docs configuration file v2
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+
+version: 2
+
+# Set the OS, Python version, and other tools for the build environment
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.10"  # Or "3.11" etc. Must satisfy your project's >=3.8 requirement.
+  # Install system dependencies required by Python packages (e.g., for rtree)
+  apt_packages:
+    - libspatialindex-dev
+
+# Build documentation in the docs/ directory with Sphinx
+sphinx:
+  configuration: docs/conf.py
+
+# Define how to install Python requirements for the build
+# This installs documentation tools and the project itself for autodoc
+python:
+  install:
+    # Install documentation-specific dependencies (sphinx, theme, etc.)
+    - requirements: docs/requirements.txt
+    # Install the 'brickalize' package itself so Sphinx's autodoc can import it
+    - method: pip
+      path: .

@@ -10,8 +10,9 @@ import numpy as np
 
 # Initialize variables
 stl_file = 'model.stl'
-grid_voxel_count = 10
-grid_direction = "x"
+output_dir = 'images'
+grid_voxel_count = 20
+grid_direction = "z"
 brick_set = BrickSet([Brick(1, 2), Brick(1, 4), Brick(2, 2), Brick(1, 1), Brick(1, 3), Brick(2, 4), Brick(1, 6), Brick(1, 1, True), Brick(1, 2, True)])
 
 # Voxelize the model
@@ -45,7 +46,9 @@ mesh_brick_list = BrickModelVisualizer.draw_model_individual_bricks(brick_model)
 
 # Save the model as mesh or images of each layer
 BrickModelVisualizer.save_model(mesh_list, file_path="brick_model.stl")
-BrickModelVisualizer.save_as_images(brick_model, dir_path="images")
+import os
+os.makedirs(output_dir, exist_ok=True)
+BrickModelVisualizer.save_as_images(brick_model, dir_path=output_dir)
 
 # Visualize/show the model
 BrickModelVisualizer.show_model(mesh_list)

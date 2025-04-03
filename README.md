@@ -80,127 +80,60 @@ This will also install the required dependencies.
 Here's a typical workflow using `brickalize`:
 
 ```python
+# examples/basic_usage.py
+from brickalize import (
+    Brick,
+    BrickSet,
+    BrickModel, # Import BrickModel if needed directly in example
+    BrickModelVisualizer,
+    Brickalizer
+)
 import numpy as np
-from brickalize import Brick, BrickSet, Brickalizer, BrickModelVisualizer
 
-# --- 1. Configuration ---
-stl_file = 'path/to/your/model.stl'  # Replace with your STL file path
-output_dir = 'brickalize_output'      # Directory for output images/STL
-output_stl_path = f"{output_dir}/brick_model.stl"
+# Initialize variables
+stl_file = 'model.stl'
+output_dir = 'images'
+grid_voxel_count = 20
+grid_direction = "z"
+brick_set = BrickSet([Brick(1, 2), Brick(1, 4), Brick(2, 2), Brick(1, 1), Brick(1, 3), Brick(2, 4), Brick(1, 6), Brick(1, 1, True), Brick(1, 2, True)])
 
-# Define the set of bricks available for building
-# Format: Brick(width, length, is_support=False)
-# Supports are optional, used only if generate_support is called.
-brick_set = BrickSet([
-    Brick(1, 1), Brick(1, 2), Brick(1, 3), Brick(1, 4), Brick(1, 6),
-    Brick(2, 2), Brick(2, 3), Brick(2, 4),
-    # Add support bricks if you plan to generate support
-    Brick(1, 1, is_support=True), Brick(1, 2, is_support=True), Brick(2, 2, is_support=True)
-])
+# Voxelize the model
+brick_array = Brickalizer.voxelize_stl(stl_file, grid_voxel_count, grid_direction, fast_mode=True)
 
-# Voxelization parameters
-grid_voxel_count = 50  # Number of voxels along the specified dimension
-grid_direction = "z"   # Voxel count constraint ('x', 'y', or 'z')
-use_fast_voxelization = False # True for faster, less accurate voxelization
-voxel_threshold = 0.5  # For non-fast mode (0 to 1)
+# Only keep the shell of the model, making it hollow
+boundary_array = Brickalizer.extract_shell_from_3d_array(brick_array)
 
-# Output image parameters
+# Convert to a brickmodel
+brick_model = Brickalizer.array_to_brick_model(boundary_array, brick_set)
+
+# Generate support
+support_array = Brickalizer.generate_support(brick_model, boundary_array)
+
+# Add support to the brick model
+brick_model = Brickalizer.array_to_brick_model(support_array, brick_set, brick_model, is_support=True)
+
+# Check if all voxels that should be occupied are occupied
+test_array = Brickalizer.brick_model_to_array(brick_model)
+assert np.array_equal(boundary_array, test_array), "The original and converted arrays are not the same!"
+
+# Normalize the brick model to ensure it starts at (0,0,0)
+# Can be helpful in situations where the brick_model is used in a different program
+brick_model.normalize()
+
+# Create a 3D mesh
+mesh_list = BrickModelVisualizer.draw_model(brick_array, support_array) # Optimized for only visible faces
+
+# Create a 3D mesh for each brick
+mesh_brick_list = BrickModelVisualizer.draw_model_individual_bricks(brick_model) # Non-optimized, drawing all faces
+
+# Save the model as mesh or images of each layer
+BrickModelVisualizer.save_model(mesh_list, file_path="brick_model.stl")
 import os
 os.makedirs(output_dir, exist_ok=True)
+BrickModelVisualizer.save_as_images(brick_model, dir_path=output_dir)
 
-# --- 2. Voxelization ---
-print("Voxelizing STL model...")
-# aspect_ratio defaults to Brick.height (1.2)
-voxel_array = Brickalizer.voxelize_stl(
-    stl_file,
-    grid_voxel_count=grid_voxel_count,
-    grid_direction=grid_direction,
-    fast_mode=use_fast_voxelization,
-    threshold=voxel_threshold
-)
-print(f"Voxel array shape: {voxel_array.shape}")
-
-# --- 3. (Optional) Shell Extraction ---
-# Uncomment the next line to make the model hollow
-# print("Extracting shell...")
-# voxel_array = Brickalizer.extract_shell_from_3d_array(voxel_array)
-
-# --- 4. Convert Voxel Array to Brick Model ---
-print("Converting voxels to building bricks...")
-brick_model = Brickalizer.array_to_brick_model(voxel_array, brick_set, is_support=False)
-print(f"Initial brick model created with {len(brick_model.layers)} layers.")
-
-# --- 5. Generate Support Structures ---
-print("Generating support structures...")
-# Needs the original voxel array to know where the model is solid
-support_array = Brickalizer.generate_support(brick_model, voxel_array)
-print(f"Support array generated. Needs support: {np.any(support_array)}")
-
-# --- 6. Add Support Bricks to the Model ---
-if np.any(support_array):
-    if not brick_set.has_support:
-        print("Warning: Support structures needed, but no support bricks defined in BrickSet.")
-    else:
-        print("Adding support bricks to the model...")
-        # Pass the existing brick_model to add supports to it
-        brick_model = Brickalizer.array_to_brick_model(
-            support_array,
-            brick_set,
-            brick_model=brick_model, # Add to existing model
-            is_support=True
-        )
-        print("Support bricks added.")
-
-# --- 7. (Optional) Normalize Model Coordinates ---
-# Ensures the model's bottom-left-front corner starts at (0,0,0)
-brick_model.normalize()
-print("Brick model normalized.")
-
-# --- 8. Visualization and Saving ---
-
-# Generate combined array for visualization (optional, but useful)
-model_array_for_vis = Brickalizer.brick_model_to_array(brick_model, include_support=False)
-support_array_for_vis = Brickalizer.brick_model_to_array(brick_model, include_support=True) & ~model_array_for_vis
-
-# Option A: Visualize as a combined mesh (faster rendering)
-print("Generating combined 3D mesh...")
-mesh_list_combined = BrickModelVisualizer.draw_model(
-    model_array_for_vis,
-    support_array=support_array_for_vis if np.any(support_array_for_vis) else None,
-    voxel_height=brick_model.layer_height
-)
-
-# Option B: Visualize individual bricks (slower rendering, more detail)
-# print("Generating individual brick meshes...")
-# mesh_list_individual = BrickModelVisualizer.draw_model_individual_bricks(brick_model)
-
-# Save the combined mesh as STL
-print(f"Saving combined mesh to {output_stl_path}...")
-saved = BrickModelVisualizer.save_model(mesh_list_combined, file_path=output_stl_path)
-if saved: print("STL model saved successfully.")
-else: print("Error saving STL model.")
-
-# Save layer-by-layer images
-print(f"Saving layer images to '{output_dir}'...")
-BrickModelVisualizer.save_as_images(
-    brick_model,
-    dir_path=output_dir,
-    brick_color=(0, 255, 255),    # BGR color for building bricks (Yellow)
-    support_color=(200, 200, 255), # BGR color for support bricks (Light Pinkish)
-    add_lego_overlay=True,       # Add stud shadows
-    show_ghost_layer=True,       # Show previous layer semi-transparently
-    pixels_per_stud=20,          # Resolution of images
-    line_thickness=0.05          # Relative thickness of brick outlines
-)
-print("Layer images saved.")
-
-# Show the 3D model (using the combined mesh)
-print("Displaying 3D model (Close window to exit)...")
-BrickModelVisualizer.show_model(mesh_list_combined)
-# Or show individual bricks: BrickModelVisualizer.show_model(mesh_list_individual)
-
-print("Brickalize process complete.")
-
+# Visualize/show the model
+BrickModelVisualizer.show_model(mesh_list)
 ```
 
 ### Key Components

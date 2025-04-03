@@ -9,11 +9,11 @@ A Python package for converting 3D models (STL) into LEGO-like brick structures,
 ---
 
 <p align="center">
-  <img src="examples/original_model.JPG" alt="Original 3D STL Model" width="30%"/>
+  <img src="https://github.com/CreativeMindstorms/brickalize/blob/46164d4c212f816c2f1d3975ce34b76d9d03ef05/examples/original_model.JPG" alt="Original 3D STL Model" width="30%"/>
      
-  <img src="examples/brickalized_model.JPG" alt="Brickalized 3D Model Output" width="30%"/>
+  <img src="https://github.com/CreativeMindstorms/brickalize/blob/46164d4c212f816c2f1d3975ce34b76d9d03ef05/examples/brickalized_model.JPG" alt="Brickalized 3D Model Output" width="30%"/>
      
-  <img src="examples/second_layer.png" alt="Example Layer Build Instruction" width="30%"/>
+  <img src="https://github.com/CreativeMindstorms/brickalize/blob/46164d4c212f816c2f1d3975ce34b76d9d03ef05/examples/second_layer.png" alt="Example Layer Build Instruction" width="30%"/>
 </p>
 <p align="center">
   <em>Left: Original Model (STL)      Center: Converted Brick Model (3D)      Right: Layer Image (2D)</em>

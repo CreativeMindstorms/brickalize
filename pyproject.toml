@@ -38,3 +38,4 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/CreativeMindstorms/brickalize"
+Documentation = "https://brickalize.readthedocs.io/en/latest/"

@@ -16,8 +16,8 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'brickalize'
 copyright = f"{datetime.date.today().year}, Sten Nellen (Creative Mindstorms)"
 author = 'Sten Nellen (Creative Mindstorms)'
-release = '1.0.3' # The full version, including alpha/beta/rc tags
-version = '1.0.3' # The short X.Y version
+release = '1.0.4' # The full version, including alpha/beta/rc tags
+version = '1.0.4' # The short X.Y version
 
 
 # -- General configuration ---------------------------------------------------

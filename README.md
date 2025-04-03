@@ -8,6 +8,22 @@ A Python package for converting 3D models (STL) into LEGO-like brick structures,
 
 ---
 
+<p align="center">
+  <img src="examples/original_model.JPG" alt="Original 3D STL Model" width="30%"/>
+     
+  <img src="examples/brickalized_model.JPG" alt="Brickalized 3D Model Output" width="30%"/>
+     
+  <img src="examples/second_layer.png" alt="Example Layer Build Instruction" width="30%"/>
+</p>
+<p align="center">
+  <em>Left: Original Model (STL)      Center: Converted Brick Model (3D)      Right: Layer Image (2D)</em>
+</p>
+<p align="center">
+  <em>Example model shown: <a href="https://www.thingiverse.com/thing:376601">Low-Poly Pikachu by flowalistik</a> on Thingiverse.</em>
+</p>
+
+---
+
 ## Table of Contents
 
 -   [Introduction](#introduction)
